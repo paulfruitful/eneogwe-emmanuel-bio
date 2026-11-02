@@ -1,16 +1,184 @@
 /**
  * Eneogwe I.N. Emmanuel — Executive Bio & Complimentary Card Site
- * Vanilla JavaScript interactions
+ * Vanilla JavaScript:
+ * 1. Classic Royal Loader
+ * 2. Minimalist IntersectionObserver Scroll Animations
+ * 3. Hero Portrait Crossfade Slider
+ * 4. Executive Sector Spotlights Carousel Slider (with swipe & auto-play)
+ * 5. Mobile Navigation, Scroll Spy, Full Bio Modal & vCard Download
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Dynamic Year
-  const yearEl = document.getElementById('current-year');
-  if (yearEl) {
-    yearEl.textContent = new Date().getFullYear();
+  // ==================== 1. CLASSIC ROYAL LOADER ====================
+  const royalLoader = document.getElementById('royal-loader');
+  const revealItems = document.querySelectorAll('.reveal-item');
+
+  function initScrollReveal() {
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.14, rootMargin: '0px 0px -24px 0px' }
+      );
+
+      revealItems.forEach((el) => observer.observe(el));
+    } else {
+      revealItems.forEach((el) => el.classList.add('is-visible'));
+    }
   }
 
-  // 2. Mobile Navigation Toggle
+  setTimeout(() => {
+    if (royalLoader) {
+      royalLoader.classList.add('loader-hidden');
+    }
+    initScrollReveal();
+  }, 1150);
+
+  // ==================== 2. HERO PORTRAIT SLIDER ====================
+  const heroSlides = document.querySelectorAll('[data-hero-slide]');
+  const heroDots = document.querySelectorAll('[data-hero-dot]');
+  const heroPrev = document.getElementById('hero-prev');
+  const heroNext = document.getElementById('hero-next');
+  let currentHeroSlide = 0;
+  let heroInterval = null;
+
+  function setHeroSlide(index) {
+    if (!heroSlides.length) return;
+    currentHeroSlide = (index + heroSlides.length) % heroSlides.length;
+
+    heroSlides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === currentHeroSlide);
+    });
+
+    heroDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentHeroSlide);
+    });
+  }
+
+  function startHeroAutoPlay() {
+    stopHeroAutoPlay();
+    heroInterval = setInterval(() => {
+      setHeroSlide(currentHeroSlide + 1);
+    }, 5500);
+  }
+
+  function stopHeroAutoPlay() {
+    if (heroInterval) clearInterval(heroInterval);
+  }
+
+  if (heroPrev) {
+    heroPrev.addEventListener('click', () => {
+      setHeroSlide(currentHeroSlide - 1);
+      startHeroAutoPlay();
+    });
+  }
+
+  if (heroNext) {
+    heroNext.addEventListener('click', () => {
+      setHeroSlide(currentHeroSlide + 1);
+      startHeroAutoPlay();
+    });
+  }
+
+  heroDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-hero-dot'), 10);
+      setHeroSlide(idx);
+      startHeroAutoPlay();
+    });
+  });
+
+  startHeroAutoPlay();
+
+  // ==================== 3. EXECUTIVE SECTOR SPOTLIGHTS SLIDER ====================
+  const sliderTrack = document.getElementById('slider-track');
+  const sliderDots = document.querySelectorAll('[data-slide]');
+  const sliderPrev = document.getElementById('slider-prev');
+  const sliderNext = document.getElementById('slider-next');
+  const sliderViewport = document.getElementById('highlights-slider');
+  const totalSlides = sliderDots.length;
+  let currentSlide = 0;
+  let sliderTimer = null;
+
+  function goToSlide(index) {
+    if (!sliderTrack || !totalSlides) return;
+    currentSlide = (index + totalSlides) % totalSlides;
+    sliderTrack.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+    sliderDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === currentSlide);
+    });
+  }
+
+  function startSliderAutoPlay() {
+    stopSliderAutoPlay();
+    sliderTimer = setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 4800);
+  }
+
+  function stopSliderAutoPlay() {
+    if (sliderTimer) clearInterval(sliderTimer);
+  }
+
+  if (sliderPrev) {
+    sliderPrev.addEventListener('click', () => {
+      goToSlide(currentSlide - 1);
+      startSliderAutoPlay();
+    });
+  }
+
+  if (sliderNext) {
+    sliderNext.addEventListener('click', () => {
+      goToSlide(currentSlide + 1);
+      startSliderAutoPlay();
+    });
+  }
+
+  sliderDots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-slide'), 10);
+      goToSlide(idx);
+      startSliderAutoPlay();
+    });
+  });
+
+  if (sliderViewport) {
+    sliderViewport.addEventListener('mouseenter', stopSliderAutoPlay);
+    sliderViewport.addEventListener('mouseleave', startSliderAutoPlay);
+
+    // Touch Swipe Support
+    let touchStartX = 0;
+    sliderViewport.addEventListener(
+      'touchstart',
+      (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      },
+      { passive: true }
+    );
+
+    sliderViewport.addEventListener(
+      'touchend',
+      (e) => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 40) {
+          goToSlide(diff > 0 ? currentSlide + 1 : currentSlide - 1);
+          startSliderAutoPlay();
+        }
+      },
+      { passive: true }
+    );
+  }
+
+  startSliderAutoPlay();
+
+  // ==================== 4. MOBILE NAVIGATION ====================
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   const iconOpen = document.getElementById('menu-icon-open');
@@ -43,13 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => toggleMobileMenu(true));
   });
 
-  // 3. Active Navigation Highlight on Scroll
+  // ==================== 5. ACTIVE NAVIGATION ON SCROLL ====================
   const navLinks = document.querySelectorAll('.nav-item');
   const sections = document.querySelectorAll('section[id], footer[id]');
 
   function updateActiveNav() {
     let currentSectionId = 'home';
-    const scrollPos = window.scrollY + 140;
+    const scrollPos = window.scrollY + 120;
 
     sections.forEach((sec) => {
       if (scrollPos >= sec.offsetTop) {
@@ -69,10 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', updateActiveNav, { passive: true });
 
-  // 4. Full Biography Modal
+  // ==================== 6. FULL BIOGRAPHY MODAL ====================
   const bioModal = document.getElementById('bio-modal');
   const openModalBtn = document.getElementById('open-bio-modal');
-  const openModalFooterBtn = document.getElementById('open-bio-modal-footer');
   const closeModalBtn = document.getElementById('close-bio-modal');
   const closeModalBottomBtn = document.getElementById('close-bio-modal-bottom');
 
@@ -91,7 +258,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (openModalBtn) openModalBtn.addEventListener('click', openBioModal);
-  if (openModalFooterBtn) openModalFooterBtn.addEventListener('click', openBioModal);
   if (closeModalBtn) closeModalBtn.addEventListener('click', closeBioModal);
   if (closeModalBottomBtn) closeModalBottomBtn.addEventListener('click', closeBioModal);
 
@@ -109,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 5. Complimentary Card vCard (.vcf) Generator
+  // ==================== 7. COMPLIMENTARY CARD vCard (.vcf) ====================
   const downloadVcardBtn = document.getElementById('download-vcard-btn');
   if (downloadVcardBtn) {
     downloadVcardBtn.addEventListener('click', () => {
@@ -134,40 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-    });
-  }
-
-  // 6. Share / Copy Profile Link
-  const shareBtn = document.getElementById('share-profile-btn');
-  const shareBtnText = document.getElementById('share-btn-text');
-
-  if (shareBtn && shareBtnText) {
-    shareBtn.addEventListener('click', async () => {
-      const shareData = {
-        title: 'Eneogwe I.N. Emmanuel — Executive Bio',
-        text: 'President, International Human Rights Protection Service (Nigeria) & Entrepreneur.',
-        url: window.location.href
-      };
-
-      if (navigator.share && window.location.protocol.startsWith('http')) {
-        try {
-          await navigator.share(shareData);
-          return;
-        } catch {
-          // Fallback to clipboard copy
-        }
-      }
-
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        const originalText = shareBtnText.textContent;
-        shareBtnText.textContent = 'Profile Link Copied!';
-        setTimeout(() => {
-          shareBtnText.textContent = originalText;
-        }, 2200);
-      } catch {
-        shareBtnText.textContent = 'Link Ready';
-      }
     });
   }
 });

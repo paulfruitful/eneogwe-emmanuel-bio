@@ -1,6 +1,8 @@
 /* 
  * Eneogwe I.N. Emmanuel — Official Executive Bio Site
- * Refined typography scale, generous whitespace, and solid executive colors:
+ * Refined typography scale, generous whitespace, classic royal loader,
+ * interactive sliders, and minimalist scroll-reveal animations.
+ * Solid Palette:
  * - Deep Navy Blue: #081529 / #0C1E3A
  * - Classic Solid Gold: #C8A24A / #DFBD69
  * - Pure White: #FFFFFF
@@ -13,7 +15,7 @@
   --color-gold: #C8A24A;
   --color-gold-light: #DFBD69;
   --color-white: #FFFFFF;
-  --color-black: #0F172A;
+  --color-black: #0A0A0A;
 }
 
 html {
@@ -29,15 +31,100 @@ body {
   letter-spacing: -0.005em;
 }
 
+/* ==================== CLASSIC ROYAL LOADER ==================== */
+#royal-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: var(--color-navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#royal-loader.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes royalSpinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes royalSpinReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes royalProgress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.royal-ring-outer {
+  animation: royalSpinSlow 14s linear infinite;
+  transform-origin: center;
+}
+
+.royal-ring-inner {
+  animation: royalSpinReverse 9s linear infinite;
+  transform-origin: center;
+}
+
+.royal-progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--color-gold);
+  animation: royalProgress 1.15s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ==================== MINIMALIST SCROLL ANIMATIONS ==================== */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
 /* Delicate Solid Gold Accent Bar Under Section Headings */
 .gold-title-bar {
   display: block;
-  width: 38px;
+  width: 0px;
   height: 3px;
   background-color: var(--color-gold);
+  transition: width 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
 }
 
-/* Navigation Active & Hover Underline */
+.is-visible .gold-title-bar,
+.gold-title-bar.bar-active {
+  width: 38px;
+}
+
+/* Subtle Royal Pulse on Emblem */
+@keyframes subtleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.emblem-float {
+  animation: subtleFloat 5s ease-in-out infinite;
+}
+
+/* ==================== NAVIGATION ==================== */
 .nav-item {
   position: relative;
   padding-bottom: 4px;
@@ -62,16 +149,35 @@ body {
   color: var(--color-gold);
 }
 
-/* Hero Portrait Seamless Right-Edge Blend into Solid Navy */
+/* ==================== HERO PORTRAIT SLIDER ==================== */
 .hero-portrait-wrap {
   position: relative;
+  min-height: 310px;
 }
 
 @media (min-width: 768px) {
+  .hero-portrait-wrap {
+    min-height: 330px;
+  }
   .hero-portrait-mask {
     -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
     mask-image: linear-gradient(to right, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
   }
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 /* Diagonal Gold Ribbon in Bottom-Right of Hero */
@@ -93,6 +199,39 @@ body {
   z-index: 20;
 }
 
+/* ==================== EXECUTIVE HIGHLIGHTS SLIDER ==================== */
+.slider-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.slider-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #CBD5E1;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.slider-dot.active {
+  width: 20px;
+  background-color: var(--color-gold);
+}
+
+.hero-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.35);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.hero-dot.active {
+  width: 18px;
+  background-color: var(--color-gold);
+}
+
 /* Diagonal Gold Wedge at Bottom-Right of Philosophy Banner */
 .philosophy-diagonal-gold {
   position: relative;
@@ -111,23 +250,52 @@ body {
   pointer-events: none;
 }
 
-/* Corporate Interest Cards — Crisp & Compact */
+/* Corporate Interest Cards — Crisp & Compact with Minimalist Hover */
 .corp-card {
   background-color: #FFFFFF;
   border: 1px solid #E2E8F0;
   border-radius: 6px;
   box-shadow: 0 1px 2px rgba(8, 21, 41, 0.03);
-  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .corp-card:hover {
   border-color: var(--color-gold);
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 12px rgba(8, 21, 41, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(8, 21, 41, 0.06);
+}
+
+.corp-card:hover .corp-icon {
+  transform: scale(1.07);
+}
+
+.corp-icon {
+  transition: transform 0.25s ease;
+}
+
+/* Read Full Bio Button Arrow Micro-Animation */
+.btn-arrow-anim svg {
+  transition: transform 0.25s ease;
+}
+
+.btn-arrow-anim:hover svg {
+  transform: translateX(3px);
 }
 
 /* Modal Backdrop */
 .modal-backdrop {
   background-color: rgba(8, 21, 41, 0.8);
   backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .gold-title-bar {
+    width: 38px !important;
+    transition: none !important;
+  }
 }
