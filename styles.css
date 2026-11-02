@@ -1,10 +1,10 @@
 /* 
  * Eneogwe I.N. Emmanuel — Official Executive Bio Site
- * Strictly matched to reference layout using real, solid colors:
- * - Deep Navy Blue: #081529 / #0B1B34
- * - Classic Solid Gold: #C8A24A / #D4AF37
+ * Refined typography scale, generous whitespace, and solid executive colors:
+ * - Deep Navy Blue: #081529 / #0C1E3A
+ * - Classic Solid Gold: #C8A24A / #DFBD69
  * - Pure White: #FFFFFF
- * - Charcoal / Black Text: #111827
+ * - Slate / Charcoal Text: #0F172A / #334155
  */
 
 :root {
@@ -18,6 +18,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 15px;
 }
 
 body {
@@ -25,24 +26,21 @@ body {
   color: #1E293B;
   background-color: var(--color-white);
   overflow-x: hidden;
+  letter-spacing: -0.005em;
 }
 
-.font-serif-display {
-  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-}
-
-/* Short Solid Gold Bar Under Section Titles */
+/* Delicate Solid Gold Accent Bar Under Section Headings */
 .gold-title-bar {
   display: block;
-  width: 52px;
-  height: 4px;
+  width: 38px;
+  height: 3px;
   background-color: var(--color-gold);
 }
 
-/* Navigation Active Underline */
+/* Navigation Active & Hover Underline */
 .nav-item {
   position: relative;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
   transition: color 0.2s ease;
 }
 
@@ -54,9 +52,9 @@ body {
   content: '';
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -1px;
   width: 100%;
-  height: 2.5px;
+  height: 2px;
   background-color: var(--color-gold);
 }
 
@@ -71,8 +69,8 @@ body {
 
 @media (min-width: 768px) {
   .hero-portrait-mask {
-    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 74%, rgba(0,0,0,0) 100%);
-    mask-image: linear-gradient(to right, rgba(0,0,0,1) 74%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right, rgba(0,0,0,1) 72%, rgba(0,0,0,0) 100%);
   }
 }
 
@@ -85,10 +83,10 @@ body {
 .hero-diagonal-gold::after {
   content: '';
   position: absolute;
-  bottom: -28px;
-  right: 18px;
-  width: 34px;
-  height: 150px;
+  bottom: -24px;
+  right: 14px;
+  width: 24px;
+  height: 115px;
   background-color: var(--color-gold);
   transform: rotate(32deg);
   pointer-events: none;
@@ -104,32 +102,32 @@ body {
 .philosophy-diagonal-gold::after {
   content: '';
   position: absolute;
-  bottom: -36px;
-  right: -12px;
-  width: 190px;
-  height: 48px;
+  bottom: -30px;
+  right: -10px;
+  width: 145px;
+  height: 36px;
   background-color: var(--color-gold);
   transform: rotate(-22deg);
   pointer-events: none;
 }
 
-/* Corporate Interest Cards */
+/* Corporate Interest Cards — Crisp & Compact */
 .corp-card {
   background-color: #FFFFFF;
-  border: 1px solid #DCE3EC;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(8, 21, 41, 0.04);
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(8, 21, 41, 0.03);
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .corp-card:hover {
   border-color: var(--color-gold);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(8, 21, 41, 0.08);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px rgba(8, 21, 41, 0.06);
 }
 
 /* Modal Backdrop */
 .modal-backdrop {
-  background-color: rgba(8, 21, 41, 0.82);
+  background-color: rgba(8, 21, 41, 0.8);
   backdrop-filter: blur(2px);
 }
